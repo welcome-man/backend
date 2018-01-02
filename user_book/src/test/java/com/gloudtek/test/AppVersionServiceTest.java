@@ -12,6 +12,7 @@ public class AppVersionServiceTest {
 	@Test
 	public void test() throws Exception {
 		System.out.println("fsdfds");
+		System.out.println("I am in.");
 	}
 	
 }
