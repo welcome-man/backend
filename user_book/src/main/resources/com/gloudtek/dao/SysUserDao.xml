@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gloudtek.dao.SysUserDao">
+
+	<select id="queryObject" resultType="com.gloudtek.entity.SysUserEntity">
+	    SELECT * FROM sys_user WHERE user_id = #{userId} AND isdelete =0
+	</select>
+	
+	<select id="getUsersByParentId" resultType="com.gloudtek.entity.SysUserEntity">
+		select * from sys_user where parent_id = #{value} and isdelete = 0
+	</select>
+	
+	<select id="getUsersByUnitId" resultType="com.gloudtek.entity.SysUserEntity">
+		select * from sys_user where unit_id = (select unit_id from sys_user where user_id = #{value} and isdelete = 0)
+	</select>
+	
+	<select id="queryList" resultType="com.gloudtek.entity.SysUserEntity">
+       SELECT u.user_id,u.parent_id,u.username,u.account,u.password,u.phone,u.telephone,u.email,u.sex,u.remark,
+              u.status,u.create_by,u.create_time,u.update_by,u.update_time,u.isdelete,
+              s.id,s.user_id,s.role_id,
+              r.role_id,r.role_name,r.remark,r.type
+         FROM sys_user u 
+         LEFT JOIN sys_user_role s ON  u.user_id=s.user_id
+         LEFT JOIN sys_role r ON  s.role_id=r.role_id
+         WHERE u.isdelete=0 ORDER BY u.create_time
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="queryTotal" resultType="int">
+	select count(*) from sys_user where isdelete =0 
+	</select>
+	
+	<!-- 根据用户ID获取用户角色 -->
+	<select id="infouserrole" resultType="Long">
+		SELECT sys_role.type
+		FROM sys_user_role
+		LEFT JOIN sys_role
+		ON sys_user_role.role_id = sys_role.role_id
+		WHERE sys_user_role.user_id = #{userId}
+	</select>
+	
+	<!-- 查询用户的所有权限 -->
+	<select id="queryAllPerms" resultType="String">
+		select m.perms from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+		where ur.user_id = #{userId}
+	</select>
+	
+	<!-- 查询用户的所有菜单ID --> 
+	<select id="queryAllMenuId" resultType="Long">
+		select m.menu_id from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+		where ur.user_id = #{userId}
+	</select>
+	
+	<select id="queryByUserName" resultType="com.gloudtek.entity.SysUserEntity">
+		select * from sys_user where username = #{username} and isdelete = 0
+	</select>
+	
+	<select id="queryByUserPhone" resultType="com.gloudtek.entity.SysUserEntity">
+		select * from sys_user where phone = #{mobilenumber} and isdelete = 0
+	</select>
+	
+	<select id="queryByUserId" resultType="com.gloudtek.entity.SysUserEntity">
+		select * from sys_user where user_id = #{userId} and isdelete = 0
+	</select>
+	
+	<insert id="save" parameterType="com.gloudtek.entity.SysUserEntity" useGeneratedKeys="true" keyProperty="userId">
+		insert into sys_user
+		(
+			`user_id`, 
+			`parent_id`, 
+			`username`, 
+			`account`,
+			`password`,
+			`phone`, 
+			`telephone`,
+			`email`, 
+			`remark`, 
+			`status`,
+			`sex`,
+			`create_by`,
+			`create_time`,
+			`update_by`,
+			`update_time`,
+			`isdelete`
+		)
+		values
+		(
+			#{userId}, 
+			#{parentId}, 
+			#{username}, 
+			#{account}, 
+			#{password},
+			#{phone},
+			#{telephone},
+			#{email},
+			#{remark},
+			#{status},
+			#{sex},
+			#{createBy},
+			now(),
+			#{updateBy},
+			#{updateTime},
+			0
+		)
+	</insert>
+
+
+
+	<!-- 根据ID获取使用单位ID -->
+	<select id="getUnitId" resultType="String">
+		select unit_id from sys_user where user_id = #{userId} and isdelete = 0
+	</select>
+	
+	<!-- 根据ID获取使用单位ID -->
+	<select id="getUnitId2" resultType="String">
+		select unit_id from sys_user where user_id = #{userId} 
+	</select>
+	
+	<update id="updateInfo" parameterType="com.gloudtek.entity.SysUserEntity">
+		update sys_user 
+		<set> 
+			<if test="username != null">`username` = #{username}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="email != null">`email` = #{email}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="account != null">`account` = #{account}, </if>
+			<if test="telephone != null">`telephone` = #{telephone}, </if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="unitId != null">`unit_id` = #{unitId}</if>
+		</set>
+		where user_id = #{userId} 
+	</update>
+	
+	
+	<!-- 删除用户管理员 -->
+	<update id="delClientManager" parameterType="List">
+		update sys_user set isdelete=1 where user_id in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>	
+
+	 
+	<update id="update" parameterType="com.gloudtek.entity.SysUserEntity">
+		update sys_user 
+		<set> 
+			<if test="username != null">`username` = #{username}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="password != null">`account` = #{account}, </if>
+			<if test="email != null">`email` = #{email}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="account != null">`account` = #{account}, </if>
+			<if test="telephone != null">`telephone` = #{telephone}, </if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="sex != null">`sex` = #{sex},</if>
+			<if test="remark != null">`remark` = #{remark}</if>
+		</set>
+		where user_id = #{userId}
+	</update>
+	
+	<update id="updatePassword" parameterType="map">
+		update sys_user set `password` = #{newPassword} 
+			where user_id = #{userId} and password = #{password}
+	</update>
+	
+	<!-- 用户管理-重置密码 -->
+	<update id="ResetPassword" parameterType="map">
+		update sys_user set `password` = #{newPassword} where user_id = #{userId}
+	</update>
+	
+	<update id="deleteBatch">
+		update sys_user set isdelete=1 where user_id in 
+		<foreach item="userId" collection="array" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+		;
+		delete from sys_user_role where user_id in 
+		<foreach item="userId" collection="array" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</update>
+	
+	<select id="getParentIdByUserId" resultType="long">
+		SELECT parent_id from sys_user where user_id = #{userId}
+	</select>
+	
+	
+	<!-- 用户记录 -->
+	<select id="queryTotaluser" resultType="int" parameterType="map">
+	select count(1) from (
+		SELECT 
+			aa.user_id as id,
+			aa.username,
+			aa.phone ,
+			aa.email ,
+			authorize_code.auth_code as authoryCode,
+			authorize_code.authorize_data as authoryTime
+		FROM(
+			SELECT
+				sys_user.user_id ,
+				sys_user.username ,
+				sys_user.phone ,
+				sys_user.email ,
+				sys_user.create_time,
+				user_code.auth_id
+			FROM
+				sys_user
+			LEFT JOIN user_code ON sys_user.user_id = user_code.user_id
+			WHERE sys_user.isdelete=0 AND sys_user.unit_id = #{unitId} and sys_user.user_id != #{parentId} ORDER BY sys_user.create_time DESC
+		)as aa
+		LEFT JOIN authorize_code on aa.auth_id=authorize_code.auth_id
+	)as bb
+		<if test="account !=null and account != ''">
+			WHERE bb.username LIKE CONCAT('%',#{account},'%')
+		</if>
+		<if test="phone !=null and phone != ''">
+			WHERE bb.phone =#{phone}
+		</if>
+		<if test="currentPage != null and pagesize != null">
+			limit #{currentPage}, #{pagesize}
+		</if>
+	</select>
+	
+	
+	<!-- 超级管理员查看客户管理员信息列表数据总条数 -->
+	<select id="clientManagerTotal" resultType="int" parameterType="Map">
+	SELECT
+		COUNT(1)
+	FROM
+		(
+			SELECT
+				*
+			FROM
+				(
+					SELECT
+						sys_user.user_id AS id ,
+						sys_user.unit_id AS unitId ,
+						unit.unit_name AS unitName ,
+						sys_user.username AS username ,
+						sys_user.account AS account ,
+						sys_user.phone AS phone ,
+						sys_user.telephone AS telephone ,
+						sys_user.remark AS remark
+					FROM
+						sys_user
+					LEFT JOIN unit ON sys_user.unit_id = unit.id
+					LEFT JOIN sys_user_role on sys_user.user_id = sys_user_role.user_id
+					LEFT JOIN sys_role on sys_user_role.role_id = sys_role.role_id
+					WHERE
+						sys_user.isdelete = 0
+					AND	sys_role.role_id = 2
+					ORDER BY
+						sys_user.create_time DESC
+				) AS data
+		) AS temp
+		<if test="unitName != null and unitName != ''">
+			where temp.unitName like CONCAT('%',#{unitName},'%')
+		</if>
+		<if test="username != null and username != ''">
+			where temp.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="phone != null and phone != ''">
+			where temp.phone like CONCAT('%',#{phone},'%')
+		</if>
+	</select>
+
+	
+	<!--  用户列表（超级管理员查看用户信息列表）记录总数 -->
+	<select id="userListTotal" resultType="int" parameterType="Map">
+	SELECT
+		COUNT(1)
+	FROM
+		(
+			SELECT
+					*
+				FROM
+					(
+						SELECT
+							sys_user.user_id AS id ,
+							sys_user.username AS username ,
+							unit.unit_name AS unitName ,
+							sys_user.phone AS phone ,
+							sys_user.telephone AS telephone ,
+							sys_user.email AS email ,
+							sys_user.create_time AS createTime ,
+							sys_user_role.role_id ,
+							sys_role.role_name
+						FROM
+							sys_user
+						LEFT JOIN unit ON sys_user.unit_id = unit.id
+						LEFT JOIN sys_user_role ON sys_user.user_id = sys_user_role.user_id
+						LEFT JOIN sys_role ON sys_user_role.user_id = sys_role.role_id
+						WHERE
+							sys_user.isdelete = 0 and sys_user.user_id != 1
+						ORDER BY
+							sys_user.create_time DESC
+					) AS data
+		) AS temp
+		<if test="userName != null and userName != ''">
+			where temp.username like CONCAT('%',#{userName},'%')
+		</if>
+		<if test="unitName != null and unitName != ''">
+			where temp.unitName like CONCAT('%',#{unitName},'%')
+		</if>
+		<if test="phone != null and phone != ''">
+			where temp.phone like CONCAT('%',#{phone},'%')
+		</if>
+	</select>
+	
+	
+	<!-- 判断用户是否已注册 -->
+	<select id="customercheckusername" parameterType="map" resultType="string">
+	  <if test="long1 !=null and long1 != ''">
+	  SELECT username FROM sys_user WHERE username = #{username} and isdelete = 0 and user_id !=${long1}
+	  </if>
+	  	<if test="long1 == null or long1 == ''">
+		SELECT username FROM sys_user WHERE username = #{username} and isdelete = 0 
+	</if>
+	  
+	</select>
+	
+
+	<!-- 删除 用户（超级管理员）-->
+	<update id="delUser" parameterType="List">
+		update sys_user set isdelete=1 where user_id in
+			<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</update>
+	
+
+	<select id="getRoleTypeByUserId" parameterType="Map" resultType="java.lang.Integer">
+		select type from sys_role where role_id in(select role_id from sys_user_role where user_id = #{userId})
+		order by type asc limit 1
+	</select>
+	
+
+	<!-- 根据单位名称查询单位ID -->
+	<select id="repeatunit" resultType="String">
+		SELECT id FROM unit WHERE unit_name = #{unitname} and isdelete = 0
+	</select>
+	
+
+	<!-- 根据单位名称查重-->
+	<select id="selectUnitName" resultType="int" parameterType="map">
+	<if test="unitId ==null or unitId == ''">
+		SELECT count(*) FROM unit WHERE unit_name = #{unitName} and isdelete = 0
+	</if>
+		<if test="unitId != null and unitId != ''">
+		SELECT count(*) FROM unit WHERE unit_name = #{unitName} and id != #{unitId} and isdelete = 0
+	</if>
+	</select>
+	
+	
+	<!-- 根据管理员账号查重-->
+	<select id="selectAccount" resultType="int" parameterType="map">
+	<if test="userId ==null or userId == ''">
+		SELECT count(*) FROM sys_user WHERE account = #{account} and isdelete = 0
+	</if>
+	<if test="userId != null and userId != ''">
+		SELECT count(*) FROM sys_user WHERE account = #{account} and user_id != #{userId} and isdelete = 0
+	</if>
+	</select>
+	
+	<!-- 根据管理员姓名查重 -->
+	<select id="selectUserName" resultType="int" parameterType="map">
+	<if test="userId ==null or userId == ''">
+		SELECT count(*) FROM sys_user WHERE username = #{username} and isdelete = 0
+	</if>
+	<if test="userId != null and userId != ''">
+		SELECT count(*) FROM sys_user WHERE username = #{username} and user_id != #{userId} and isdelete = 0
+	</if>
+	</select>
+	
+	
+		<!-- 根据用户名查重 -->
+	<select id = "selectName" resultType="int" parameterType="map" >
+	<if test="userId != null and userId != ''">
+	 select count(*) from sys_user  where username = #{username} and user_id != #{userId} and isdelete = 0
+	 </if>
+	<if test="userId ==null or userId == ''">
+	 select count(*) from sys_user  where username = #{username} and isdelete = 0
+	</if>
+	</select>
+	
+	<update id="deleteCustomer" parameterType="Long">
+		update sys_user set isdelete=1 where user_id =#{userId};
+		delete from sys_user_role where user_id = #{userId}
+	</update>
+	
+  <update id="deleteUnit" parameterType="string">
+    update unit  set isdelete = 1 where id= #{unitId} and isdelete =0
+  </update>
+  
+  <update id ="deleteByUnitId">
+    update sys_user set isdelete = 1 where  unit_id = #{unitId} and isdelete =0;
+    update sensor_info set isdelete = 1 where unit_id =#{unitId} and isdelete = 0
+  </update>
+  
+  <update id ="deleteCheckUnit">
+    update check_unit set isdelete = 1 where user_id in(select user_id from sys_user where unit_id = #{unitId}) and isdelete = 0
+  </update>
+  
+  <delete id="deleteAuthCodeByUnitId">
+    delete from authorize_code where unit_id =#{unitId};
+    delete from user_code where user_id in (select user_id from sys_user where user_id =#{userId} or parent_id =#{userId});
+    delete from sys_user_role where user_id in (select user_id from sys_user where user_id = #{userId} or parent_id =#{userId})
+  </delete>
+  <select id="queryRoleName" parameterType="Long" resultType="com.gloudtek.entity.SysRoleEntity">
+     select group_concat(role_name) as roleName from sys_role where  role_id in (select role_id  from sys_user_role where user_id = #{userId})
+  </select>
+  <select id="findRoleInfoByUserId" parameterType="Long" resultType="com.gloudtek.entity.SysUserEntity">
+   select  id,sur.role_id as roleId,sr.role_name as roleName from sys_user_role  sur 
+   left join sys_role sr on sur.role_id = sr.role_id where sur.user_id = #{userId}
+  </select>
+  
+</mapper>

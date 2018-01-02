@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gloudtek.dao.DbBackupDao">
+
+	<select id="queryByCondition" resultType="com.gloudtek.entity.DbBackupEntity">
+		select id,file_name as fileName,url,remark,create_by as createBy,create_time as createTime,
+		update_by as updateBy,update_time as updateTime,isdelete 
+		from db_backup where isdelete = 0 order by createTime desc
+		limit #{offset}, #{limit}
+	</select>
+	
+	<select id="queryTotalByCondition" resultType="java.lang.Integer">
+		select count(1) from db_backup where isdelete = 0
+	</select>
+	
+	<select id="getRecordByCondition" resultType="com.gloudtek.entity.DbBackupEntity">
+		select id,file_name as fileName,url,remark,create_by as createBy,create_time as createTime,
+		update_by as updateBy,update_time as updateTime,isdelete from db_backup 
+		where isdelete = 0 and create_time &lt; (SELECT date_sub(NOW(),interval 20 day) from DUAL)
+	</select>
+	
+	<insert id="save" parameterType="com.gloudtek.entity.DbBackupEntity">
+		insert into db_backup(id,file_name,url,remark,create_by,create_time,update_by,update_time,isdelete)
+		values(#{id},#{fileName},#{url},#{remark},#{createBy},#{createTime},#{updateBy},#{updateTime},${isdelete})
+	</insert>
+	
+	<select id="queryObject" resultType="com.gloudtek.entity.DbBackupEntity">
+		select id,file_name as fileName,url,remark,create_by as createBy,create_time as createTime,
+		update_by as updateBy,update_time as updateTime,isdelete 
+		from db_backup where isdelete = 0 and id = #{value}
+	</select>
+	
+	<delete id="deleteBatch">
+		delete from db_backup where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

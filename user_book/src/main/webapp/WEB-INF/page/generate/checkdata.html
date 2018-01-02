@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>检定数据表</title>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			#if($shiro.hasPermission("checkdata:save"))
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			#end
+			#if($shiro.hasPermission("checkdata:update"))
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			#end
+			#if($shiro.hasPermission("checkdata:delete"))
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			#end
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">标准器ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.sensorInfoId" placeholder="标准器ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">批次号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.batchNum" placeholder="批次号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">序号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.sort" placeholder="序号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">标准值</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.standardValue" placeholder="标准值"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">电压值</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.voltageValue" placeholder="电压值"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">采样值</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.sampleValue" placeholder="采样值"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">示值误差</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.indicationError" placeholder="示值误差"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">数据类型（1：拉伸；2：压缩）</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.dataType" placeholder="数据类型（1：拉伸；2：压缩）"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建者</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.createBy" placeholder="创建者"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">更新者</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.updateBy" placeholder="更新者"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">更新时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.updateTime" placeholder="更新时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">是否删除（0：未删除；1：删除）</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="checkData.isdelete" placeholder="是否删除（0：未删除；1：删除）"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- <script src="${rc.contextPath}/js/checkdata/checkdata.js?_${date.systemTime}"></script> -->
+<script src="${rc.contextPath}/js/generate/checkdata.js?_${date.systemTime}"></script>
+
+</body>
+</html>

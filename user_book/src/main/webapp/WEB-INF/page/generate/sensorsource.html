@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>设备溯源表</title>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			#if($shiro.hasPermission("sensorsource:save"))
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			#end
+			#if($shiro.hasPermission("sensorsource:update"))
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			#end
+			#if($shiro.hasPermission("sensorsource:delete"))
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			#end
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">传感器信息ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.sensorInfoId" placeholder="传感器信息ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">检定证书号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.standardNum" placeholder="检定证书号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">溯源单位</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.sourceUnit" placeholder="溯源单位"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">溯源日期</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.sourceDate" placeholder="溯源日期"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">有效期至</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.deadDate" placeholder="有效期至"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">不确定度</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.uncertainty" placeholder="不确定度"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">测量范围</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.measuringRange" placeholder="测量范围"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">标定数据表ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.signId" placeholder="标定数据表ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">检定数据表ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.checkId" placeholder="检定数据表ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建者</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.createBy" placeholder="创建者"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">更新者</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.updateBy" placeholder="更新者"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">更新时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.updateTime" placeholder="更新时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">是否删除（0：未删除；1：删除）</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="sensorSource.isdelete" placeholder="是否删除（0：未删除；1：删除）"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- <script src="${rc.contextPath}/js/sensorsource/sensorsource.js?_${date.systemTime}"></script> -->
+<script src="${rc.contextPath}/js/generate/sensorsource.js?_${date.systemTime}"></script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+@media screen and (min-height: 972px) {
+    .loginground_head{
+        width: 100%;
+        height: 300px;
+        background-image: url(../../image/loginBack_01.png);
+        background-repeat: no-repeat;
+
+    }
+    .loginground_content{
+        width: 100%;
+        height: 478px;
+        background-image: url(../../image/loginBack_02.png);
+        background-repeat: no-repeat;
+
+
+    }
+    .loginground_bottom{
+        width: 100%;
+        height: 456px;
+        background-image: url(../../image/loginBack_03.png);
+        background-repeat: no-repeat;
+        color: white;
+        position:relative;
+    }
+}
+.loginground_head{
+    width: 100%;
+    height: 238px;
+    background-image: url(../../image/loginBack_01.png);
+    background-repeat: no-repeat;
+    font-family: 微软雅黑;
+
+ }
+.loginground_head .font{
+    color: white;
+    font-size: 52px;
+    position: absolute;
+    left: 50%;
+    top:107px;
+    /*利用transform达到水平垂直居中效果*/
+    transform: translate(-50%, -50%);
+}
+.loginground_content{
+    width: 100%;
+    height: 378px;
+    background-image: url(../../image/loginBack_02.png);
+    background-repeat: no-repeat;
+    font-family: 微软雅黑;
+
+}
+
+.building{
+    position: relative;
+    left: 10%;
+    top: -126px;
+    width: 25%;
+
+}
+.loginPart{
+    float: right;
+    margin-right: 10%;
+    padding:110px 5px;
+    width: 250px;
+
+}
+.loginPart .inputPart{
+    border-bottom: 1px solid #999999;
+    padding-bottom: 2px;
+    margin-bottom: 25px;
+}
+.loginPart .icon{
+
+}
+.loginPart input{
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+.loginBtn{
+    background-color: #268bcd;
+    color: #ffffff;
+    font-size: 1em;
+    border-radius: 5px;
+}
+.vCodeInput{
+    width: 113px;
+    border-bottom: 1px solid #999;
+    float: left;
+}
+.vCodeInput input[type="text"]{
+    width: 80px;
+}
+.vCodeImg{
+    float: left;
+    width: 115px;
+    margin-left: 9px;
+}
+.loginBtn{
+    margin-top: 80px;
+}
+.loginground_bottom{
+    width: 100%;
+    height: 356px;
+    background-image: url(../../image/loginBack_03.png);
+    background-repeat: no-repeat;
+    color: white;
+    position:relative;
+    font-family: 微软雅黑;
+}
+.loginground_bottom .font{
+    position: relative;
+    font-size: 32px;
+    margin-left: 13.5%;
+    padding-top: 70px;
+}
+.loginground_bottom .companyInfo{
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    /*利用transform达到水平垂直居中效果*/
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.loginground_bottom .companyInfo span{
+    margin-right: 50px;
+}
+.loginground_bottom .companyInfo p{
+    margin-top: 10px;
+}

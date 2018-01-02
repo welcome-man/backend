@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>设备信息表</title>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			#if($shiro.hasPermission("equipinfo:save"))
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			#end
+			#if($shiro.hasPermission("equipinfo:update"))
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			#end
+			#if($shiro.hasPermission("equipinfo:delete"))
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			#end
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">制造厂</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.productor" placeholder="制造厂"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">型号规格</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.equipType" placeholder="型号规格"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">出厂编号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.equipNo" placeholder="出厂编号"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">被检设备量程类型</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.equipmentRange" placeholder="被检设备量程类型"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">被检设备量程值</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.equipmentValue" placeholder="被检设备量程值"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">准确度等级</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.accuracyLevel" placeholder="准确度等级"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">被检设备名称</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.equipmentName" placeholder="被检设备名称"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建者</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.createBy" placeholder="创建者"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">创建时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.createTime" placeholder="创建时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">更新者</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.updateBy" placeholder="更新者"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">更新时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.updateTime" placeholder="更新时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">是否删除（0：未删除；1：删除）</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="equipInfo.isdelete" placeholder="是否删除（0：未删除；1：删除）"/>
+			    </div>
+			</div>
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- <script src="${rc.contextPath}/js/equipinfo/equipinfo.js?_${date.systemTime}"></script> -->
+<script src="${rc.contextPath}/js/generate/equipinfo.js?_${date.systemTime}"></script>
+
+</body>
+</html>
