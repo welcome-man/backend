@@ -13,6 +13,7 @@ public class AppVersionServiceTest {
 	public void test() throws Exception {
 		System.out.println("fsdfds");
 		System.out.println("I am in.");
+		System.out.println("I am out.");
 	}
 	
 }
